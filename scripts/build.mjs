@@ -45,12 +45,29 @@ await fs.rm(DIST_DIR, { recursive: true, force: true });
 // QR_OUT_DIR은 삭제하지 않고 기존 데이터 유지
 await ensureDir(path.join(DIST_DIR,'data'));
 await ensureDir(path.join(DIST_DIR,BLOB_DIR));
+await ensureDir(path.join(DIST_DIR,'img')); // 이미지 디렉토리 생성
 await ensureDir(QR_OUT_DIR);
 
 // dist index/js 준비
 await ensureDir(path.join(DIST_DIR,'js'));
 try { await fs.copyFile('dist.index.template.html', path.join(DIST_DIR,'index.html')); } catch {}
 await fs.copyFile('src/assets/js/app.js', path.join(DIST_DIR,'js/app.js'));
+
+// 이미지 파일들 복사
+try {
+  const imgFiles = await fs.readdir(path.join(SRC_DIR, 'img'));
+  for (const imgFile of imgFiles) {
+    if (imgFile.match(/\.(png|jpg|jpeg|gif|svg)$/i)) {
+      await fs.copyFile(
+        path.join(SRC_DIR, 'img', imgFile),
+        path.join(DIST_DIR, 'img', imgFile)
+      );
+      console.log(`Copied image: ${imgFile}`);
+    }
+  }
+} catch (error) {
+  console.log('No img directory found or no images to copy');
+}
 
 // 기존 qr-urls.csv 읽기 (있으면)
 let oldQR = {};
