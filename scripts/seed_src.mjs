@@ -46,19 +46,9 @@ for (const line of dataLines) {
       await fs.access(file);
       // exists -> skip
     } catch {
-      const content = `# 해설 ${code}
+      const content =`# 해설 ${code}
 
-문제 설명(요약)을 여기에 씁니다.
-
-**정답 아이디어**
-- 핵심 아이디어를 기술합니다.
-
-**해설 본문**
-수식 예시: $a^2 + b^2 = c^2$
-
-$$
-\int_0^1 x^2 \, dx = \frac{1}{3}
-$$
+작성 중
 `;
       await fs.writeFile(file, content, 'utf8');
       count++;
