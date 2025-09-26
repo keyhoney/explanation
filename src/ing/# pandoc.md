@@ -1,0 +1,1 @@
+pandoc input.docx -t markdown -o output.md --mathjax --lua-filter=adddisplaystyle.lua
