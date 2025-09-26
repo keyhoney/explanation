@@ -45,7 +45,7 @@ await ensureDir(QR_OUT_DIR);
 // dist index/js 준비
 await ensureDir(path.join(DIST_DIR,'js'));
 try { await fs.copyFile('dist.index.template.html', path.join(DIST_DIR,'index.html')); } catch {}
-await fs.copyFile('dist/js/app.js', path.join(DIST_DIR,'js/app.js'));
+await fs.copyFile('src/assets/js/app.js', path.join(DIST_DIR,'js/app.js'));
 
 // manifest / qr csv
 const manifest = [];
