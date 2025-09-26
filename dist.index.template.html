@@ -6,11 +6,198 @@
   <meta name="robots" content="noindex,nofollow" />
   <title>해설 보기</title>
   <style>
-    body { font-family: system-ui,-apple-system,Segoe UI,Roboto,sans-serif; line-height: 1.6; max-width: 800px; margin: 5vh auto; padding: 0 16px; }
-    .card { border: 1px solid #e5e7eb; border-radius: 16px; padding: 24px; box-shadow: 0 1px 6px rgba(0,0,0,.06); }
-    .muted { color: #6b7280; font-size: 14px; }
-    .err { color: #b91c1c; }
-    code, pre { background: #f3f4f6; padding: 2px 6px; border-radius: 6px; }
+    * { box-sizing: border-box; }
+    
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif; 
+      line-height: 1.7; 
+      margin: 0; 
+      padding: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #1f2937;
+    }
+    
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 0;
+    }
+    
+    .card { 
+      background: #ffffff;
+      border: none;
+      border-radius: 24px; 
+      padding: 3rem;
+      box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+    }
+    
+    .status {
+      color: #6b7280; 
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 2rem;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border-radius: 12px;
+      border-left: 4px solid #667eea;
+    }
+    
+    .err { 
+      color: #dc2626;
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left-color: #dc2626;
+    }
+    
+    #content {
+      font-size: 18px;
+      line-height: 1.8;
+    }
+    
+    #content h1 {
+      color: #1f2937;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0 0 2rem 0;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    #content h2 {
+      color: #374151;
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin: 2.5rem 0 1.5rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    
+    #content h3 {
+      color: #4b5563;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2rem 0 1rem 0;
+    }
+    
+    #content p {
+      margin: 1.5rem 0;
+      color: #374151;
+    }
+    
+    #content ul, #content ol {
+      margin: 1.5rem 0;
+      padding-left: 2rem;
+    }
+    
+    #content li {
+      margin: 0.75rem 0;
+      color: #374151;
+    }
+    
+    #content strong {
+      color: #1f2937;
+      font-weight: 600;
+    }
+    
+    #content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      margin: 2rem 0;
+      display: block;
+    }
+    
+    code, pre { 
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 0.5rem 1rem; 
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    }
+    
+    pre {
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+    
+    blockquote {
+      border-left: 4px solid #667eea;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      border-radius: 0 12px 12px 0;
+      font-style: italic;
+      color: #4b5563;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    th, td {
+      padding: 1rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    th {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: 600;
+    }
+    
+    tr:hover {
+      background-color: #f9fafb;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        width: 95%;
+        padding: 1rem 0;
+      }
+      
+      .card {
+        padding: 2rem 1.5rem;
+        border-radius: 16px;
+      }
+      
+      #content h1 {
+        font-size: 2rem;
+      }
+      
+      #content h2 {
+        font-size: 1.5rem;
+      }
+      
+      #content {
+        font-size: 16px;
+      }
+    }
   </style>
 
   <!-- MathJax: LaTeX 렌더링 -->
@@ -24,9 +211,11 @@
     src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-  <div class="card">
-    <div id="status" class="muted">QR 코드를 통해 접속 중…</div>
-    <div id="content" style="margin-top: 16px;"></div>
+  <div class="container">
+    <div class="card">
+      <div id="status" class="status">QR 코드를 통해 접속 중…</div>
+      <div id="content"></div>
+    </div>
   </div>
   <script src="./js/app.js"></script>
 </body>
