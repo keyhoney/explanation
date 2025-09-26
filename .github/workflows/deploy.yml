@@ -1,0 +1,61 @@
+name: Build (Private Repo) & Deploy Pages + QR
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm ci || npm i
+
+      - name: Seed src (optional first run)
+        run: npm run seed
+        continue-on-error: true
+
+      - name: Build encrypted site (dist) & QR lists (qr_out)
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          BASE_URL: https://keyhoney.github.io/explanation/
+        run: |
+          npm run build
+          npm run qr
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Upload QR Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: qr-codes
+          path: |
+            qr_out/**/*.png
+            qr_out/qr-urls.csv
+            qr_out/qr_urls.txt
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

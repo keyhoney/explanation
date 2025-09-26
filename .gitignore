@@ -1,0 +1,4 @@
+dist/
+qr_out/
+node_modules/
+.env

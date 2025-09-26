@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>해설 보기</title>
+  <style>
+    body { font-family: system-ui,-apple-system,Segoe UI,Roboto,sans-serif; line-height: 1.6; max-width: 800px; margin: 5vh auto; padding: 0 16px; }
+    .card { border: 1px solid #e5e7eb; border-radius: 16px; padding: 24px; box-shadow: 0 1px 6px rgba(0,0,0,.06); }
+    .muted { color: #6b7280; font-size: 14px; }
+    .err { color: #b91c1c; }
+    code, pre { background: #f3f4f6; padding: 2px 6px; border-radius: 6px; }
+  </style>
+
+  <!-- MathJax: LaTeX 렌더링 -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <div class="card">
+    <div id="status" class="muted">QR 코드를 통해 접속 중…</div>
+    <div id="content" style="margin-top: 16px;"></div>
+  </div>
+  <script src="./js/app.js"></script>
+</body>
+</html>
