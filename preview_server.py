@@ -12,7 +12,6 @@ import os
 import re
 from urllib.parse import urlparse, parse_qs
 import markdown
-import mathjax
 
 # 설정
 PORT = 3000
@@ -65,6 +64,34 @@ class PreviewHandler(http.server.SimpleHTTPRequestHandler):
                     self.wfile.write(html.encode('utf-8'))
                 else:
                     self.send_error(404, f"File not found: {filename}")
+                    
+            elif path.startswith('/img/'):
+                # 이미지 파일 서빙
+                img_filename = path.replace('/img/', '')
+                img_path = os.path.join(SRC_DIR, 'img', img_filename)
+                
+                if os.path.exists(img_path):
+                    # 이미지 파일 확장자에 따른 MIME 타입 설정
+                    ext = os.path.splitext(img_filename)[1].lower()
+                    mime_types = {
+                        '.png': 'image/png',
+                        '.jpg': 'image/jpeg',
+                        '.jpeg': 'image/jpeg',
+                        '.gif': 'image/gif',
+                        '.svg': 'image/svg+xml'
+                    }
+                    content_type = mime_types.get(ext, 'application/octet-stream')
+                    
+                    with open(img_path, 'rb') as f:
+                        img_data = f.read()
+                    
+                    self.send_response(200)
+                    self.send_header('Content-type', content_type)
+                    self.send_header('Access-Control-Allow-Origin', '*')
+                    self.end_headers()
+                    self.wfile.write(img_data)
+                else:
+                    self.send_error(404, f"Image not found: {img_filename}")
                     
             elif path == '/' or path == '/preview.html':
                 # 프리뷰 페이지 반환
