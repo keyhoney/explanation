@@ -47,6 +47,4 @@
 [표시되는 글자](https://www.google.com "올리면 보이는 글자")
 
 # 이미지
-[![설명](이미지링크)](https://예시.com "링크 설명")
-
-<p align="center"><img src="https://images.unsplash.com/photo-1659340298031-f3e6824f6679?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" width="50%"></img></p>
+<p align="center"><img src="./img/20260610_1.png" width="70%"></img></p>
