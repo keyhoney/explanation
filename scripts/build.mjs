@@ -96,8 +96,8 @@ for (const f of files) {
   }
 
   // 해설 암호화 (항상 최신 내용으로 갱신)
-  const aesKey = b64urlToBytes(k); // 복호화용 키는 그대로 사용
-  const { iv, ct } = aesGcmEncrypt(aesKey, Buffer.from(html,'utf8'));
+  const aesKeyBytes = b64urlToBytes(k); // 복호화용 키는 그대로 사용
+  const { iv, ct } = aesGcmEncrypt(aesKeyBytes, Buffer.from(html,'utf8'));
 
   // blob 저장
   const sub = randomId(2).toLowerCase();
