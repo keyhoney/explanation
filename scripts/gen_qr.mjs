@@ -21,11 +21,20 @@ for (const line of lines) {
   const src = cols[idx.source].replace(/\.[^/.]+$/, '');
   const filename = path.join(QR_OUT_DIR, `qr-${q}-${src}.png`);
 
+  // 기존 QR 파일이 있으면 건너뛰기
+  try {
+    await fs.access(filename);
+    console.log('QR exists, skipping:', filename);
+    continue;
+  } catch {
+    // 파일이 없으면 새로 생성
+  }
+
   await QRCode.toFile(filename, url, {
     margin: 1,
     width: 600,
     errorCorrectionLevel: 'M'
   });
-  console.log('QR:', filename);
+  console.log('QR created:', filename);
 }
 console.log('All QR codes generated.');

@@ -19,6 +19,11 @@ const QR_OUT_DIR = 'qr_out';
 
 // ===== utils =====
 const b64url = (buf) => Buffer.from(buf).toString('base64').replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const b64urlToBytes = (b64url) => {
+  const pad = '='.repeat((4 - (b64url.length % 4)) % 4);
+  const b64 = (b64url + pad).replace(/-/g, '+').replace(/_/g, '/');
+  return Buffer.from(b64, 'base64');
+};
 const randomId = (len) => {
   const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
   const rnd = crypto.randomBytes(len); let s = '';
@@ -37,7 +42,7 @@ const aesGcmEncrypt = (keyBytes, plainBytes) => {
 
 // ===== prep =====
 await fs.rm(DIST_DIR, { recursive: true, force: true });
-await fs.rm(QR_OUT_DIR, { recursive: true, force: true });
+// QR_OUT_DIR은 삭제하지 않고 기존 데이터 유지
 await ensureDir(path.join(DIST_DIR,'data'));
 await ensureDir(path.join(DIST_DIR,BLOB_DIR));
 await ensureDir(QR_OUT_DIR);
@@ -46,6 +51,22 @@ await ensureDir(QR_OUT_DIR);
 await ensureDir(path.join(DIST_DIR,'js'));
 try { await fs.copyFile('dist.index.template.html', path.join(DIST_DIR,'index.html')); } catch {}
 await fs.copyFile('src/assets/js/app.js', path.join(DIST_DIR,'js/app.js'));
+
+// 기존 qr-urls.csv 읽기 (있으면)
+let oldQR = {};
+try {
+  const csv = await fs.readFile(path.join(QR_OUT_DIR,'qr-urls.csv'),'utf8');
+  const lines = csv.trim().split('\n');
+  const header = lines.shift().split(',');
+  const idx = {q: header.indexOf('q'), sig: header.indexOf('sig'), k: header.indexOf('k'), url: header.indexOf('url')};
+  for (const line of lines) {
+    const cols = line.split(',');
+    oldQR[cols[idx.q]] = { sig: cols[idx.sig], k: cols[idx.k], url: cols[idx.url] };
+  }
+  console.log(`Loaded ${Object.keys(oldQR).length} existing QR entries`);
+} catch {
+  console.log('No previous qr-urls.csv found; creating new one');
+}
 
 // manifest / qr csv
 const manifest = [];
@@ -57,11 +78,28 @@ for (const f of files) {
   const html = marked.parse(md);
 
   const q = f.replace(/\.md$/,''); // 파일명이 문항코드(YYYYMMDD)라고 가정
-  // 무결성 서명은 q에 대해 생성
-  const sig = hmacTrunc(SECRET, q, 12);
-  const aesKey = crypto.randomBytes(16); // 128-bit
+  
+  let sig, k, url;
+  if (oldQR[q]) {
+    // 기존 값 재사용
+    sig = oldQR[q].sig;
+    k   = oldQR[q].k;
+    url = oldQR[q].url;
+    console.log(`Reusing QR for ${q}`);
+  } else {
+    // 새 문항 → 새 QR 생성
+    sig = hmacTrunc(SECRET, q, 12);
+    const aesKey = crypto.randomBytes(16);
+    k = b64url(aesKey);
+    url = `${BASE_URL}#q=${q}&sig=${sig}&k=${k}`;
+    console.log(`New QR for ${q}`);
+  }
 
+  // 해설 암호화 (항상 최신 내용으로 갱신)
+  const aesKey = b64urlToBytes(k); // 복호화용 키는 그대로 사용
   const { iv, ct } = aesGcmEncrypt(aesKey, Buffer.from(html,'utf8'));
+
+  // blob 저장
   const sub = randomId(2).toLowerCase();
   const name = randomId(11);
   const dirPath = path.join(DIST_DIR, BLOB_DIR, sub);
@@ -71,9 +109,6 @@ for (const f of files) {
 
   const relPath = path.relative(DIST_DIR, blobPath).replace(/\\/g,'/');
   manifest.push({ q, sig, path: relPath });
-
-  const k = b64url(aesKey);
-  const url = `${BASE_URL}#q=${q}&sig=${sig}&k=${k}`;
   qrRows.push([q, sig, k, url, f]);
   console.log(`Built ${f} -> q=${q} sig=${sig} path=${relPath}`);
 }
