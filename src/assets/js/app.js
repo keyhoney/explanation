@@ -50,7 +50,7 @@
     }
 
     const html = bytesToUtf8(plain);
-    $status.textContent = '해설을 확인하세요!';
+    $status.textContent = '개념별 새겨봐야 할 기출 문제! by. KeyHoney';
     $content.innerHTML = html; // 신뢰된 빌드 산출물 가정
     if (window.MathJax && window.MathJax.typesetPromise) await window.MathJax.typesetPromise([$content]);
   } catch (e) {
