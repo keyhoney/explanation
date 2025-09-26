@@ -27,13 +27,13 @@
   try {
     const { q, sig, k } = getParams();
     if (!q || !sig) return setError('잘못된 접근입니다. (파라미터 누락)');
-    $status.textContent = '코드 확인 중…';
+    $status.textContent = '접속 코드를 확인하고 있습니다...';
 
     const manifest = await (await fetch('./data/manifest.json', { cache: 'no-store' })).json();
     const entry = manifest.find(x => x.q === q && x.sig === sig);
     if (!entry) return setError('유효하지 않은 코드이거나 만료된 링크입니다.');
 
-    $status.textContent = '해설 로딩 중…';
+    $status.textContent = '해설 내용을 불러오는 중...';
     const blobJson = await (await fetch(`./${entry.path}`, { cache: 'no-store' })).json();
     if (!k) return setError('복호화 키가 없습니다. (QR을 통해 접속해주세요)');
 
@@ -50,7 +50,7 @@
     }
 
     const html = bytesToUtf8(plain);
-    $status.textContent = '해설이 준비되었습니다.';
+    $status.textContent = '해설을 확인하세요!';
     $content.innerHTML = html; // 신뢰된 빌드 산출물 가정
     if (window.MathJax && window.MathJax.typesetPromise) await window.MathJax.typesetPromise([$content]);
   } catch (e) {
