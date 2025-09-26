@@ -78,11 +78,14 @@ try {
   const idx = {q: header.indexOf('q'), sig: header.indexOf('sig'), k: header.indexOf('k'), url: header.indexOf('url')};
   for (const line of lines) {
     const cols = line.split(',');
-    oldQR[cols[idx.q]] = { sig: cols[idx.sig], k: cols[idx.k], url: cols[idx.url] };
+    if (cols.length >= 4) { // 유효한 행만 처리
+      oldQR[cols[idx.q]] = { sig: cols[idx.sig], k: cols[idx.k], url: cols[idx.url] };
+    }
   }
   console.log(`Loaded ${Object.keys(oldQR).length} existing QR entries`);
-} catch {
+} catch (error) {
   console.log('No previous qr-urls.csv found; creating new one');
+  console.log('Error:', error.message);
 }
 
 // manifest / qr csv
@@ -102,14 +105,14 @@ for (const f of files) {
     sig = oldQR[q].sig;
     k   = oldQR[q].k;
     url = oldQR[q].url;
-    console.log(`Reusing QR for ${q}`);
+    console.log(`✅ Reusing QR for ${q} - k=${k.substring(0,8)}...`);
   } else {
     // 새 문항 → 새 QR 생성
     sig = hmacTrunc(SECRET, q, 12);
     const aesKey = crypto.randomBytes(16);
     k = b64url(aesKey);
     url = `${BASE_URL}#q=${q}&sig=${sig}&k=${k}`;
-    console.log(`New QR for ${q}`);
+    console.log(`🆕 New QR for ${q} - k=${k.substring(0,8)}...`);
   }
 
   // 해설 암호화 (항상 최신 내용으로 갱신)
