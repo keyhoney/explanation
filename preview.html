@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>해설 프리뷰</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0;
+    }
+    
+    :root {
+      --beige-50: #fdfcfb;
+      --beige-100: #f9f7f4;
+      --beige-200: #f2ede5;
+      --beige-300: #e8ddd1;
+      --beige-400: #d4c4b0;
+      --beige-500: #c0a68c;
+      --beige-600: #a68b6b;
+      --beige-700: #8b6f47;
+      --beige-800: #6b5433;
+      --beige-900: #4a3a23;
+      
+      --warm-gray-50: #fafaf9;
+      --warm-gray-100: #f5f5f4;
+      --warm-gray-200: #e7e5e4;
+      --warm-gray-300: #d6d3d1;
+      --warm-gray-400: #a8a29e;
+      --warm-gray-500: #78716c;
+      --warm-gray-600: #57534e;
+      --warm-gray-700: #44403c;
+      --warm-gray-800: #292524;
+      --warm-gray-900: #1c1917;
+    }
+    
+    body { 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', system-ui, sans-serif; 
+      line-height: 1.6; 
+      margin: 0; 
+      padding: 0;
+      background: var(--beige-50);
+      min-height: 100vh;
+      color: var(--warm-gray-800);
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .header {
+      background: var(--beige-100);
+      border-bottom: 1px solid var(--beige-200);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .header h1 {
+      color: var(--warm-gray-900);
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .file-selector {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .file-selector select {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--beige-300);
+      border-radius: 0.5rem;
+      background: var(--beige-50);
+      color: var(--warm-gray-700);
+      font-size: 0.875rem;
+      min-width: 200px;
+    }
+    
+    .file-selector button {
+      padding: 0.5rem 1rem;
+      background: var(--beige-500);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .file-selector button:hover {
+      background: var(--beige-600);
+    }
+    
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem 0;
+    }
+    
+    .card { 
+      background: var(--beige-50);
+      border: 1px solid var(--beige-200);
+      border-radius: 2rem; 
+      padding: 4rem;
+      box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.05),
+        0 20px 25px -5px rgba(0, 0, 0, 0.04),
+        0 10px 10px -5px rgba(0, 0, 0, 0.02);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--beige-300), transparent);
+    }
+    
+    .status {
+      color: var(--warm-gray-600); 
+      font-size: 15px;
+      font-weight: 400;
+      margin-bottom: 3rem;
+      padding: 1.25rem 1.75rem;
+      background: var(--beige-100);
+      border-radius: 1rem;
+      border: 1px solid var(--beige-200);
+      position: relative;
+    }
+    
+    .status::before {
+      content: '';
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      background: var(--beige-500);
+      border-radius: 50%;
+    }
+    
+    .status {
+      padding-left: 2.5rem;
+    }
+    
+    #content {
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--warm-gray-700);
+    }
+    
+    #content h1 {
+      color: var(--warm-gray-900);
+      font-size: 2.25rem;
+      font-weight: 600;
+      margin: 0 0 2.5rem 0;
+      letter-spacing: -0.025em;
+      position: relative;
+    }
+    
+    #content h1::after {
+      content: '';
+      position: absolute;
+      bottom: -0.75rem;
+      left: 0;
+      width: 3rem;
+      height: 2px;
+      background: var(--beige-400);
+      border-radius: 1px;
+    }
+    
+    #content h2 {
+      color: var(--warm-gray-800);
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 3rem 0 1.5rem 0;
+      letter-spacing: -0.025em;
+      position: relative;
+    }
+    
+    #content h2::before {
+      content: '';
+      position: absolute;
+      left: -1.5rem;
+      top: 0.5rem;
+      width: 4px;
+      height: 1.5rem;
+      background: var(--beige-300);
+      border-radius: 2px;
+    }
+    
+    #content h3 {
+      color: var(--warm-gray-700);
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin: 2.5rem 0 1rem 0;
+      letter-spacing: -0.025em;
+    }
+    
+    #content p {
+      margin: 1.5rem 0;
+      color: var(--warm-gray-700);
+    }
+    
+    #content ul, #content ol {
+      margin: 1.5rem 0;
+      padding-left: 1.5rem;
+    }
+    
+    #content li {
+      margin: 0.5rem 0;
+      color: var(--warm-gray-700);
+    }
+    
+    #content ul li::marker {
+      color: var(--beige-400);
+    }
+    
+    #content strong {
+      color: var(--warm-gray-900);
+      font-weight: 600;
+    }
+    
+    #content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.75rem;
+      box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.05),
+        0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      margin: 2.5rem 0;
+      display: block;
+      border: 1px solid var(--beige-200);
+    }
+    
+    code { 
+      background: var(--beige-100);
+      padding: 0.25rem 0.5rem; 
+      border-radius: 0.375rem;
+      border: 1px solid var(--beige-200);
+      font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+      font-size: 0.875em;
+      color: var(--warm-gray-700);
+    }
+    
+    pre {
+      background: var(--beige-100);
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--beige-200);
+      overflow-x: auto;
+      margin: 2rem 0;
+      font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+      font-size: 0.875em;
+      line-height: 1.6;
+    }
+    
+    blockquote {
+      border-left: 3px solid var(--beige-400);
+      background: var(--beige-100);
+      padding: 1.5rem 2rem;
+      margin: 2.5rem 0;
+      border-radius: 0 0.75rem 0.75rem 0;
+      font-style: italic;
+      color: var(--warm-gray-600);
+      position: relative;
+    }
+    
+    blockquote::before {
+      content: '"';
+      position: absolute;
+      top: -0.5rem;
+      left: 1rem;
+      font-size: 3rem;
+      color: var(--beige-300);
+      line-height: 1;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2.5rem 0;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      border: 1px solid var(--beige-200);
+      background: var(--beige-50);
+    }
+    
+    th, td {
+      padding: 1rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid var(--beige-200);
+    }
+    
+    th {
+      background: var(--beige-200);
+      color: var(--warm-gray-800);
+      font-weight: 500;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    tr:hover {
+      background-color: var(--beige-100);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    /* 수식 스타일링 */
+    .MathJax {
+      color: var(--warm-gray-700) !important;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        width: 95%;
+        padding: 1rem 0;
+      }
+      
+      .card {
+        padding: 2.5rem 2rem;
+        border-radius: 1.5rem;
+      }
+      
+      #content h1 {
+        font-size: 1.875rem;
+      }
+      
+      #content h2 {
+        font-size: 1.375rem;
+      }
+      
+      #content {
+        font-size: 16px;
+      }
+      
+      #content h2::before {
+        display: none;
+      }
+    }
+  </style>
+
+  <!-- MathJax: LaTeX 렌더링 -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <div class="header">
+    <h1>📚 해설 프리뷰</h1>
+    <div class="file-selector">
+      <select id="fileSelect">
+        <option value="">해설 파일을 선택하세요...</option>
+      </select>
+      <button onclick="loadPreview()">프리뷰 로드</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <div id="status" class="status">해설 파일을 선택하고 "프리뷰 로드" 버튼을 클릭하세요.</div>
+      <div id="content"></div>
+    </div>
+  </div>
+
+  <script>
+    // 파일 목록 로드
+    async function loadFileList() {
+      try {
+        const response = await fetch('/api/files');
+        const files = await response.json();
+        
+        const select = document.getElementById('fileSelect');
+        files.forEach(file => {
+          const option = document.createElement('option');
+          option.value = file;
+          option.textContent = file.replace('.md', '');
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error('파일 목록을 불러올 수 없습니다:', error);
+        document.getElementById('status').textContent = '파일 목록을 불러올 수 없습니다.';
+      }
+    }
+
+    // 프리뷰 로드
+    async function loadPreview() {
+      const fileSelect = document.getElementById('fileSelect');
+      const selectedFile = fileSelect.value;
+      
+      if (!selectedFile) {
+        document.getElementById('status').textContent = '파일을 선택해주세요.';
+        return;
+      }
+
+      const status = document.getElementById('status');
+      const content = document.getElementById('content');
+      
+      status.textContent = `${selectedFile} 로딩 중...`;
+      content.innerHTML = '';
+
+      try {
+        const response = await fetch(`/api/preview/${selectedFile}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const html = await response.text();
+        status.textContent = `✅ ${selectedFile} 프리뷰 로드 완료`;
+        content.innerHTML = html;
+        
+        // MathJax 렌더링
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          await window.MathJax.typesetPromise([content]);
+        }
+      } catch (error) {
+        console.error('프리뷰 로드 실패:', error);
+        status.textContent = `❌ ${selectedFile} 로드 실패: ${error.message}`;
+        content.innerHTML = '';
+      }
+    }
+
+    // 페이지 로드 시 파일 목록 로드
+    document.addEventListener('DOMContentLoaded', loadFileList);
+  </script>
+</body>
+</html>
